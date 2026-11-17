@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "camp": {
+    "id": "camp-001",
+    "name": "MMA Training Camp"
+  },
+  "athletes": [
+    { "id": "athlete-001", "firstName": "Alex", "lastName": "Morgan", "ageDivision": "Senior", "weightClassKg": 70.3 },
+    { "id": "athlete-002", "firstName": "Daniel", "lastName": "Smith", "ageDivision": "Youth A", "weightClassKg": 65.8 },
+    { "id": "athlete-003", "firstName": "Omar", "lastName": "Haddad", "ageDivision": "Senior", "weightClassKg": 65.8 },
+    { "id": "athlete-004", "firstName": "Sara", "lastName": "Keller", "ageDivision": "Senior", "weightClassKg": 56.7 },
+    { "id": "athlete-005", "firstName": "Ivan", "lastName": "Petrov", "ageDivision": "Junior", "weightClassKg": 83.9 },
+    { "id": "athlete-006", "firstName": "Lina", "lastName": "Novak", "ageDivision": "Junior", "weightClassKg": 52.2 },
+    { "id": "athlete-007", "firstName": "Yusuf", "lastName": "Rahman", "ageDivision": "Youth B", "weightClassKg": 57 },
+    { "id": "athlete-008", "firstName": "Marco", "lastName": "Silva", "ageDivision": "Senior", "weightClassKg": 77.1 },
+    { "id": "athlete-009", "firstName": "Alex", "lastName": "Morgan", "ageDivision": "Junior", "weightClassKg": 61.2 },
+    { "id": "athlete-010", "firstName": "Tom", "lastName": "Barker", "ageDivision": "Youth C", "weightClassKg": 44 }
+  ]
+}

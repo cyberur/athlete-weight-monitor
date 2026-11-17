@@ -1,0 +1,16 @@
+{
+  "name": "Athlete Weight Monitor",
+  "short_name": "Weigh-in",
+  "description": "Offline-first daily weigh-in and weight-control monitor for MMA training camps.",
+  "start_url": "./#/weigh",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f1b2d",
+  "theme_color": "#0f1b2d",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
