@@ -104,7 +104,7 @@ export function fullName(a: Pick<Athlete, 'firstName' | 'lastName'>): string {
 }
 
 export function sortName(a: Pick<Athlete, 'firstName' | 'lastName'>): string {
-  return `${a.lastName} ${a.firstName}`.toLowerCase();
+  return `${a.firstName} ${a.lastName}`.toLowerCase(); // first name first, as the team uses names
 }
 
 /** Describe the interval for a daily delta so multi-day changes are never shown as one day. */

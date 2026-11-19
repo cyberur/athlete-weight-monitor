@@ -380,10 +380,10 @@ def main():
             assert '1. A / Daniel Smith / 65.8 kg ✅' in lines, txt
             # exclude Sara Keller (weighed today) from attendance; she stays on Team and in weight reports
             page.get_by_test_id('tab-roster').click()
-            page.locator('tr', has_text='Keller, Sara').get_by_role('button', name='Edit').click()
+            page.locator('tr', has_text='Sara Keller').get_by_role('button', name='Edit').click()
             page.get_by_test_id('f-no-attendance').check()
             page.get_by_test_id('athlete-save').click()
-            expect(page.locator('tr', has_text='Keller, Sara')).to_contain_text('not in attendance')
+            expect(page.locator('tr', has_text='Sara Keller')).to_contain_text('not in attendance')
             page.get_by_test_id('tab-team').click()
             expect(page.get_by_test_id('row-athlete-004')).to_be_visible()
             page.get_by_test_id('team-attendance').click()

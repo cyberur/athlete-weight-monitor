@@ -211,7 +211,7 @@ export function WeighInScreen() {
                 data-testid={`pick-${a.id}`}
               >
                 <span className="ath-item-name">
-                  {a.lastName}, {a.firstName}
+                  {fullName(a)}
                   <small>
                     {a.ageDivision} · {fmtKg(a.weightClassKg)}
                   </small>

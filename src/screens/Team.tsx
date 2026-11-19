@@ -170,7 +170,7 @@ function Row({ r, reasonLabel }: { r: TeamRow; reasonLabel: (id?: string | null)
   return (
     <tr className={`row-${r.status.toLowerCase()}`} onClick={() => open(a.id)} data-testid={`row-${a.id}`}>
       <td className="name">
-        {a.lastName}, {a.firstName}
+        {fullName(a)}
       </td>
       <td>{a.ageDivision}</td>
       <td className="num">{fmtKg(e ? e.record.weightClassKgAtTime : a.weightClassKg)}</td>

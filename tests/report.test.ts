@@ -38,7 +38,7 @@ describe('reports', () => {
   it('single day, all active athletes: counts + missing', () => {
     const r = buildReport(camp, athletes, records, reasons, opts({}));
     expect(r.days).toEqual(['2026-11-13']);
-    expect(r.athletes.map((a) => a.id)).toEqual(['y1', 's1', 's2']); // sorted by last name, removed excluded
+    expect(r.athletes.map((a) => a.id)).toEqual(['s1', 's2', 'y1']); // sorted by first name, removed excluded
     expect(r.dayCounts['2026-11-13']).toEqual({ RED: 0, YELLOW: 1, GREEN: 1, MISSING: 1 });
     const s1 = r.cells.find((c) => c.athlete.id === 's1')!;
     expect(s1.e?.daily).toMatchObject({ deltaKg: -0.9, days: 1 }); // previous before range is used
@@ -80,6 +80,6 @@ describe('reports', () => {
     expect(lines[0]).toBe('date,athlete_id,first_name,last_name,age_division,weight_class_kg,weight_kg,previous_date,days_since_previous,daily_delta_kg,category_delta_kg,status');
     expect(lines).toHaveLength(1 + 4); // s1×2, y1×1, s2×1 — missing rows omitted
     expect(lines.join()).not.toContain('secret');
-    expect(lines[2]).toBe('2026-11-12,s1,Khalid,Mansoori,Senior,65.8,67.9,2026-11-10,2,-0.6,2.1,RED');
+    expect(lines[1]).toBe('2026-11-12,s1,Khalid,Mansoori,Senior,65.8,67.9,2026-11-10,2,-0.6,2.1,RED');
   });
 });

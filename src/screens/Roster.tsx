@@ -103,7 +103,7 @@ export function RosterScreen() {
                 <tr key={a.id} className={a.active ? '' : 'removed'}>
                   <td className="name">
                     <button className="link-btn" onClick={() => go(`athlete/${encodeURIComponent(a.id)}`)}>
-                      {a.lastName}, {a.firstName}
+                      {fullName(a)}
                     </button>
                     {!a.active && <span className="tag">removed</span>}
                     {a.excludeFromAttendance && <span className="tag tag-noatt">not in attendance</span>}

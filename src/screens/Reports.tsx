@@ -313,7 +313,7 @@ function WeightReport() {
                           data-testid={`sel-${a.id}`}
                         />
                         <span>
-                          {a.lastName}, {a.firstName}
+                          {fullName(a)}
                           <small>
                             {a.ageDivision} · {fmtKg(a.weightClassKg)}
                             {!a.active && ' · removed'}
