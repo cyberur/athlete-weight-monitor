@@ -136,6 +136,11 @@ function AttendanceReport() {
         </div>
         <p className="small muted">
           {r.presentCount} present of {r.rosterCount} on roster
+          {snap.athletes.some((a) => a.excludeFromAttendance && a.active) &&
+            ` · not listed (excluded in Roster): ${snap.athletes
+              .filter((a) => a.excludeFromAttendance && a.active)
+              .map((a) => `${a.firstName} ${a.lastName}`)
+              .join(', ')}`}
         </p>
       </section>
       <div className="card rdoc report-doc" data-testid="att-doc" dangerouslySetInnerHTML={{ __html: html }} />

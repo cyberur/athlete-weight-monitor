@@ -223,6 +223,7 @@ export function parseBackup(text: string): BackupParseResult {
     if (!nonEmpty(a.ageDivision)) fail(`athletes[${i}] ageDivision invalid`);
     if (!isNum(a.weightClassKg)) fail(`athletes[${i}] weightClassKg invalid`);
     if (typeof a.active !== 'boolean') fail(`athletes[${i}] active must be boolean`);
+    if (a.excludeFromAttendance !== undefined && typeof a.excludeFromAttendance !== 'boolean') fail(`athletes[${i}] excludeFromAttendance must be boolean`);
   });
 
   const reasons = d.healthReasons as unknown[];

@@ -23,6 +23,8 @@ export interface Athlete {
   ageDivision: string;
   weightClassKg: number;
   active: boolean; // false = removed from active roster, history kept
+  /** Weighed and monitored as usual, but never listed in the Attendance report. */
+  excludeFromAttendance?: boolean;
   createdAt: string;
   updatedAt: string;
 }

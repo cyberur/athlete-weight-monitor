@@ -378,9 +378,24 @@ def main():
             assert lines[0].startswith('*Attendance* ' + TODAY.strftime('%d/%m/%y')), lines[0]
             assert '*Youth* (1)' in lines and '*Senior* (4)' in lines, txt
             assert '1. A / Daniel Smith / 65.8 kg ✅' in lines, txt
+            # exclude Sara Keller (weighed today) from attendance; she stays on Team and in weight reports
+            page.get_by_test_id('tab-roster').click()
+            page.locator('tr', has_text='Keller, Sara').get_by_role('button', name='Edit').click()
+            page.get_by_test_id('f-no-attendance').check()
+            page.get_by_test_id('athlete-save').click()
+            expect(page.locator('tr', has_text='Keller, Sara')).to_contain_text('not in attendance')
+            page.get_by_test_id('tab-team').click()
+            expect(page.get_by_test_id('row-athlete-004')).to_be_visible()
+            page.get_by_test_id('team-attendance').click()
+            expect(doc).to_contain_text('Present: 5 of 9')
+            expect(doc).not_to_contain_text('Sara Keller')
+            page.get_by_test_id('att-absent').click()
+            expect(doc).not_to_contain_text('Sara Keller')
+            page.get_by_test_id('att-absent').click()
+            expect(page.get_by_text('not listed (excluded in Roster): Sara Keller')).to_be_visible()
             # previous day: only 2 weighed (001, 003)
             page.get_by_test_id('att-date').fill(YDAY)
-            expect(doc).to_contain_text('Present: 2 of 10')
+            expect(doc).to_contain_text('Present: 2 of 9')
             page.get_by_test_id('tab-reports').click()
             page.get_by_test_id('rtype-weight').click()
         satt()

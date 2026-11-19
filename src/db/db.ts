@@ -219,7 +219,7 @@ export async function applyRosterImport(
 export async function upsertAthlete(
   db: DB,
   campId: string,
-  input: { id?: string; firstName: string; lastName: string; ageDivision: string; weightClassKg: number },
+  input: { id?: string; firstName: string; lastName: string; ageDivision: string; weightClassKg: number; excludeFromAttendance?: boolean },
 ): Promise<Athlete> {
   if (!input.firstName.trim() || !input.lastName.trim()) throw new StorageError('First and last name are required');
   if (!input.ageDivision.trim()) throw new StorageError('Age division is required');
@@ -236,6 +236,7 @@ export async function upsertAthlete(
     ageDivision: input.ageDivision.trim(),
     weightClassKg: roundKg(input.weightClassKg),
     active: ex ? ex.active : true,
+    excludeFromAttendance: input.excludeFromAttendance ?? ex?.excludeFromAttendance ?? false,
     createdAt: ex?.createdAt ?? ts,
     updatedAt: ts,
   };

@@ -49,6 +49,17 @@ describe('attendance', () => {
     expect(attendanceHtml(r, { showAbsent: true, showClass: true })).toContain('Saif Hammad');
   });
 
+  it('athletes excluded from attendance are never listed (present or absent) nor counted', () => {
+    const ex = athletes.map((x) => (x.id === 'm' || x.id === 's' ? { ...x, excludeFromAttendance: true } : x));
+    const r = buildAttendance(camp, ex, recs, '2026-11-19');
+    expect(r.presentCount).toBe(3);
+    expect(r.rosterCount).toBe(4);
+    const ids = r.groups.flatMap((g) => [...g.present, ...g.absent].map((e) => e.athlete.id));
+    expect(ids).not.toContain('m');
+    expect(ids).not.toContain('s');
+    expect(attendanceHtml(r, { showAbsent: true, showClass: true })).not.toContain('Almaqboul');
+  });
+
   it('WhatsApp text', () => {
     const t = attendanceText(buildAttendance(camp, athletes, recs, '2026-11-19'), { showAbsent: false, showClass: true });
     expect(t.split('\n')).toEqual([

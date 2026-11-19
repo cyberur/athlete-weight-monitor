@@ -140,6 +140,7 @@ Reports → **Attendance** (or **Attendance** on the Team screen):
 - Athletes are grouped **Youth** (sorted D→C→B→A), **Junior**, **Senior**; any other division gets its own group.
 - **Present** means a weigh-in is recorded for that date.
 - Options: show the weight class; list absent athletes per group.
+- Athletes marked **Exclude from Attendance report** (Roster → Edit) are still weighed, shown on Team, history and weight reports, but never appear in Attendance (neither present nor absent, not counted). Roster re-import keeps this flag.
 - **Copy text (WhatsApp)** produces the team's usual format (`*Attendance* 19/11/26`, `1. B / Name / 44 kg ✅`). Print / PDF and an HTML file are also available.
 
 ## 6. IMMAF reference data

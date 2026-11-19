@@ -93,6 +93,22 @@ describe('roster import', () => {
     expect(s.weighIns[0].weightClassKgAtTime).toBe(a0.weightClassKg); // historical snapshot untouched
   });
 
+  it('exclude-from-attendance flag is saved and survives roster re-import', async () => {
+    const db = await fresh();
+    const camp = await createCamp(db, { name: 'C' });
+    const row = { id: 'z1', firstName: 'Zamzam', lastName: 'Test', ageDivision: 'Senior', weightClassKg: 56.7 };
+    await applyRosterImport(db, camp.id, [row]);
+    await upsertAthlete(db, camp.id, { ...row, excludeFromAttendance: true });
+    await applyRosterImport(db, camp.id, [{ ...row, weightClassKg: 61.2 }]);
+    const a = (await loadSnapshot(db)).athletes[0];
+    expect(a.excludeFromAttendance).toBe(true);
+    expect(a.weightClassKg).toBe(61.2);
+    const b = await exportBackup(db);
+    expect(parseBackup(JSON.stringify(b)).ok).toBe(true);
+    await upsertAthlete(db, camp.id, { ...row, excludeFromAttendance: false });
+    expect((await loadSnapshot(db)).athletes[0].excludeFromAttendance).toBe(false);
+  });
+
   it('removing an athlete keeps history; re-import reactivates', async () => {
     const db = await fresh();
     const camp = await createCamp(db, { name: 'C' });

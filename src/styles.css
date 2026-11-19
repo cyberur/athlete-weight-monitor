@@ -429,3 +429,7 @@ label.disabled { opacity: .5; }
 .report-type { margin-bottom: 12px; }
 .report-type button { min-height: 44px; padding: 0 20px; }
 @media print { .report-type { display: none !important; } }
+
+.tag-noatt { background: #efe6fa; color: #6b2fb3; }
+.att-check { align-items: flex-start; font-weight: 600; color: var(--ink); }
+.att-check input { margin-top: 2px; }

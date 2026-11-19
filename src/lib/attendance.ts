@@ -65,6 +65,7 @@ export function buildAttendance(camp: Camp, athletes: Athlete[], weighIns: Weigh
   const groups = new Map<string, AttendanceGroup>();
   let rosterCount = 0;
   for (const a of athletes) {
+    if (a.excludeFromAttendance) continue; // monitored, but not part of this camp's attendance
     const w = onDay.get(a.id);
     if (!w && !a.active) continue; // removed athletes only appear if they were actually present
     if (a.active) rosterCount++;
@@ -81,7 +82,8 @@ export function buildAttendance(camp: Camp, athletes: Athlete[], weighIns: Weigh
     g.present.sort(sortEntries);
     g.absent.sort(sortEntries);
   });
-  return { camp, date, groups: list, presentCount: onDay.size, rosterCount };
+  const presentCount = list.reduce((n, g) => n + g.present.length, 0);
+  return { camp, date, groups: list, presentCount, rosterCount };
 }
 
 const esc = (s: string) =>

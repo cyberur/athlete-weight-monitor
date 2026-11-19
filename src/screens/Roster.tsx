@@ -106,6 +106,7 @@ export function RosterScreen() {
                       {a.lastName}, {a.firstName}
                     </button>
                     {!a.active && <span className="tag">removed</span>}
+                    {a.excludeFromAttendance && <span className="tag tag-noatt">not in attendance</span>}
                     <small className="short muted">
                       <br />
                       {a.ageDivision} · {fmtKg(a.weightClassKg)} kg
@@ -298,12 +299,13 @@ function AthleteForm({
   athlete: Athlete | null;
   existingIds: Set<string>;
   onClose: () => void;
-  onSave: (v: { id?: string; firstName: string; lastName: string; ageDivision: string; weightClassKg: number }) => Promise<void>;
+  onSave: (v: { id?: string; firstName: string; lastName: string; ageDivision: string; weightClassKg: number; excludeFromAttendance: boolean }) => Promise<void>;
 }) {
   const { snap } = useApp();
   const [first, setFirst] = useState(athlete?.firstName ?? '');
   const [last, setLast] = useState(athlete?.lastName ?? '');
   const [id, setId] = useState(athlete?.id ?? '');
+  const [noAtt, setNoAtt] = useState(!!athlete?.excludeFromAttendance);
   const [division, setDivision] = useState(athlete?.ageDivision ?? snap.reference.divisions[0]?.name ?? '');
   const divRef = snap.reference.divisions.find((d) => d.name === division);
   const classInRef = (kg: number) => divRef?.classes.some((c) => Math.round(c.kg * 100) === Math.round(kg * 100));
@@ -327,7 +329,7 @@ function AthleteForm({
           <button
             className="btn btn-primary"
             disabled={!valid}
-            onClick={() => onSave({ id: athlete?.id ?? (id.trim() || undefined), firstName: first, lastName: last, ageDivision: division, weightClassKg: kg })}
+            onClick={() => onSave({ id: athlete?.id ?? (id.trim() || undefined), firstName: first, lastName: last, ageDivision: division, weightClassKg: kg, excludeFromAttendance: noAtt })}
             data-testid="athlete-save"
           >
             Save
@@ -384,6 +386,13 @@ function AthleteForm({
             <input inputMode="decimal" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="e.g. 70.3" data-testid="f-custom" />
           </label>
         )}
+        <label className="check att-check">
+          <input type="checkbox" checked={noAtt} onChange={(e) => setNoAtt(e.target.checked)} data-testid="f-no-attendance" />
+          <span>
+            Exclude from Attendance report
+            <small className="muted"> — still weighed and monitored (e.g. preparing for another event)</small>
+          </span>
+        </label>
         {athlete && <p className="small muted">Changing division or class does not alter existing weigh-ins; they keep the class recorded at the time.</p>}
       </div>
     </Modal>
