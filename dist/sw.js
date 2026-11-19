@@ -1,10 +1,10 @@
 /* Athlete Weight Monitor service worker — generated at build time. */
-const VERSION = '1d2d0a90b6f8';
+const VERSION = '6b5fbfd13c36';
 const CACHE = `awm-${VERSION}`;
 const PRECACHE = [
   "./",
-  "assets/index-C1IP8Gaq.js",
-  "assets/index-xjT2XkDh.css",
+  "assets/index-BYEhKOzY.js",
+  "assets/index-GgHMEvof.css",
   "icons/apple-touch-icon.png",
   "icons/icon-192.png",
   "icons/icon-512.png",

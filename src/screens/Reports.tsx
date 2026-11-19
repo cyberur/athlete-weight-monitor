@@ -16,11 +16,134 @@ import { addDays, isIsoDate } from '../lib/dates';
 import { fullName, sortName } from '../lib/calc';
 import { fmtKg } from '../lib/weight';
 import { canShareFiles, downloadText, safeName, shareText, stamp } from '../lib/download';
+import { ATTENDANCE_CSS, attendanceHtml, attendanceStandaloneHtml, attendanceText, buildAttendance, type AttendanceOptions } from '../lib/attendance';
 
 // keep the last settings while the app is open
 let lastOptions: ReportOptions | null = null;
+let lastType: 'weight' | 'attendance' = 'weight';
+let lastAtt: AttendanceOptions = { showAbsent: false, showClass: true };
 
 export function ReportsScreen() {
+  const route = useRoute();
+  const qType = route.query.get('type');
+  const [type, setType] = useState<'weight' | 'attendance'>(qType === 'attendance' ? 'attendance' : lastType);
+  useEffect(() => {
+    if (qType === 'attendance' || qType === 'weight') setType(qType);
+  }, [qType]);
+  useEffect(() => {
+    lastType = type;
+  }, [type]);
+  return (
+    <div className="reports">
+      <style>{REPORT_CSS + ATTENDANCE_CSS}</style>
+      <div className="seg report-type" role="radiogroup" data-testid="rtype">
+        <button role="radio" aria-checked={type === 'weight'} className={type === 'weight' ? 'on' : ''} onClick={() => setType('weight')} data-testid="rtype-weight">
+          Weight report
+        </button>
+        <button role="radio" aria-checked={type === 'attendance'} className={type === 'attendance' ? 'on' : ''} onClick={() => setType('attendance')} data-testid="rtype-attendance">
+          Attendance
+        </button>
+      </div>
+      {type === 'weight' ? <WeightReport /> : <AttendanceReport />}
+    </div>
+  );
+}
+
+function AttendanceReport() {
+  const { snap, today, toast } = useApp();
+  const route = useRoute();
+  const camp = snap.camp!;
+  const qd = route.query.get('date');
+  const [date, setDate] = useState(qd && isIsoDate(qd) ? qd : today);
+  const [o, setO] = useState<AttendanceOptions>(lastAtt);
+  useEffect(() => {
+    lastAtt = o;
+  }, [o]);
+  const r = useMemo(() => buildAttendance(camp, snap.athletes, snap.weighIns, date), [camp, snap.athletes, snap.weighIns, date]);
+  const html = useMemo(() => attendanceHtml(r, o), [r, o]);
+  const text = () => attendanceText(r, o);
+  const fileName = `attendance_${safeName(camp.name)}_${date}.html`;
+  const share = canShareFiles();
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text());
+      toast('ok', 'Attendance copied — paste into WhatsApp');
+    } catch {
+      toast('error', 'Copy not allowed here — use Share text');
+    }
+  };
+  const shareTextOnly = async () => {
+    try {
+      await navigator.share({ text: text() });
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') toast('error', `Share failed: ${(e as Error).message}`);
+    }
+  };
+
+  return (
+    <>
+      <section className="card report-settings">
+        <h1>Attendance</h1>
+        <div className="rs-row">
+          <div className="rs-label">Date</div>
+          <div className="rs-body">
+            <div className="rs-dates">
+              <input type="date" value={date} onChange={(e) => e.target.value && setDate(e.target.value)} aria-label="Attendance date" data-testid="att-date" />
+              <button className="chip" onClick={() => setDate(today)}>Today</button>
+              <button className="chip" onClick={() => setDate(addDays(today, -1))}>Yesterday</button>
+            </div>
+            <p className="small muted">Present = athletes with a weigh-in recorded on this date.</p>
+          </div>
+        </div>
+        <div className="rs-row">
+          <div className="rs-label">Show</div>
+          <div className="rs-body">
+            <div className="chips">
+              <button className={`chip ${o.showClass ? 'chip-on' : ''}`} aria-pressed={o.showClass} onClick={() => setO({ ...o, showClass: !o.showClass })} data-testid="att-class">
+                {o.showClass ? '✓ ' : ''}Weight class
+              </button>
+              <button className={`chip ${o.showAbsent ? 'chip-on' : ''}`} aria-pressed={o.showAbsent} onClick={() => setO({ ...o, showAbsent: !o.showAbsent })} data-testid="att-absent">
+                {o.showAbsent ? '✓ ' : ''}Absent athletes
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="row-gap report-actions">
+          <button className="btn btn-primary" onClick={copy} data-testid="att-copy">
+            Copy text (WhatsApp)
+          </button>
+          {typeof navigator.share === 'function' && (
+            <button className="btn" onClick={shareTextOnly}>
+              Share text…
+            </button>
+          )}
+          <button className="btn" onClick={() => window.print()}>
+            Print / PDF
+          </button>
+          {share && (
+            <button className="btn" onClick={() => shareText(fileName, attendanceStandaloneHtml(r, o, REPORT_CSS), 'text/html').catch((e) => toast('error', String(e)))}>
+              Share file…
+            </button>
+          )}
+          <button
+            className="btn"
+            onClick={() => (downloadText(fileName, attendanceStandaloneHtml(r, o, REPORT_CSS), 'text/html'), toast('ok', 'Attendance downloaded'))}
+            data-testid="att-html"
+          >
+            Download HTML
+          </button>
+        </div>
+        <p className="small muted">
+          {r.presentCount} present of {r.rosterCount} on roster
+        </p>
+      </section>
+      <div className="card rdoc report-doc" data-testid="att-doc" dangerouslySetInnerHTML={{ __html: html }} />
+    </>
+  );
+}
+
+function WeightReport() {
   const { snap, today, toast } = useApp();
   const route = useRoute();
   const camp = snap.camp!;
@@ -94,10 +217,9 @@ export function ReportsScreen() {
   );
 
   return (
-    <div className="reports">
-      <style>{REPORT_CSS}</style>
+    <>
       <section className="card report-settings">
-        <h1>Report</h1>
+        <h1>Weight report</h1>
 
         <div className="rs-row">
           <div className="rs-label">Period</div>
@@ -262,6 +384,6 @@ export function ReportsScreen() {
       </section>
 
       {report && <div className="card rdoc report-doc" data-testid="report-doc" dangerouslySetInnerHTML={{ __html: html }} />}
-    </div>
+    </>
   );
 }

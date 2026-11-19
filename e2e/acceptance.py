@@ -310,6 +310,7 @@ def main():
         @step('Reports (offline): one day / range, one athlete / group / all, health & notes on/off, CSV/HTML/PDF')
         def srep():
             page.get_by_test_id('tab-reports').click()
+            page.get_by_test_id('rtype-weight').click()
             doc = page.get_by_test_id('report-doc')
             # one day, all athletes, everything shown
             expect(doc).to_contain_text('All athletes (10)')
@@ -354,6 +355,35 @@ def main():
             expect(doc).to_contain_text('Daniel Smith')
             expect(doc).to_contain_text('Dehydration')
         srep()
+
+        @step('Attendance report: date, title, Youth/Junior/Senior groups, absent toggle, WhatsApp text')
+        def satt():
+            page.get_by_test_id('tab-team').click()
+            page.get_by_test_id('team-attendance').click()
+            doc = page.get_by_test_id('att-doc')
+            expect(doc).to_contain_text('ATTENDANCE')
+            expect(doc).to_contain_text('List of athletes present at training')
+            expect(doc).to_contain_text(TODAY.strftime('%-d %b %Y'))
+            expect(doc).to_contain_text('Present: 6 of 10')
+            expect(doc.locator('h2')).to_have_text(['Youth (1)', 'Junior (1)', 'Senior (4)'])
+            expect(doc).not_to_contain_text('Lina Novak')
+            page.get_by_test_id('att-absent').click()
+            expect(doc).to_contain_text('Absent:'); expect(doc).to_contain_text('Lina Novak')
+            page.get_by_test_id('att-absent').click()
+            page.screenshot(path=f'{SHOTS}/ipad-landscape-attendance.png', full_page=True)
+            ctx.grant_permissions(['clipboard-read', 'clipboard-write'], origin=URL.rstrip('/'))
+            page.get_by_test_id('att-copy').click()
+            txt = page.evaluate('navigator.clipboard.readText()')
+            lines = txt.split('\n')
+            assert lines[0].startswith('*Attendance* ' + TODAY.strftime('%d/%m/%y')), lines[0]
+            assert '*Youth* (1)' in lines and '*Senior* (4)' in lines, txt
+            assert '1. A / Daniel Smith / 65.8 kg ✅' in lines, txt
+            # previous day: only 2 weighed (001, 003)
+            page.get_by_test_id('att-date').fill(YDAY)
+            expect(doc).to_contain_text('Present: 2 of 10')
+            page.get_by_test_id('tab-reports').click()
+            page.get_by_test_id('rtype-weight').click()
+        satt()
 
         @step('CSV export works offline (dot decimals, ISO dates)')
         def scsv():

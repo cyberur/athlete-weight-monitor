@@ -133,6 +133,15 @@ Re-importing the same file creates nothing new. Updates never touch weigh-in his
 - When Health status or Notes are on, the report is marked confidential. Turn both off before sharing a report outside the medical team.
 - Report settings are kept while the app stays open.
 
+### Attendance report
+
+Reports → **Attendance** (or **Attendance** on the Team screen):
+- One date, shown prominently, with the heading "List of athletes present at training".
+- Athletes are grouped **Youth** (sorted D→C→B→A), **Junior**, **Senior**; any other division gets its own group.
+- **Present** means a weigh-in is recorded for that date.
+- Options: show the weight class; list absent athletes per group.
+- **Copy text (WhatsApp)** produces the team's usual format (`*Attendance* 19/11/26`, `1. B / Name / 44 kg ✅`). Print / PDF and an HTML file are also available.
+
 ## 6. IMMAF reference data
 
 These are stored locally and editable in Settings. Sources (checked Nov 2026):

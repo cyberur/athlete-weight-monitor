@@ -43,7 +43,7 @@ export function AthleteScreen({ id }: { id: string }) {
         </div>
         <button
           className="btn"
-          onClick={() => go(`reports?athlete=${encodeURIComponent(athlete.id)}&from=${hist.length ? hist[hist.length - 1].record.date : ''}&to=${hist.length ? hist[0].record.date : ''}`)}
+          onClick={() => go(`reports?type=weight&athlete=${encodeURIComponent(athlete.id)}&from=${hist.length ? hist[hist.length - 1].record.date : ''}&to=${hist.length ? hist[0].record.date : ''}`)}
           data-testid="athlete-report"
         >
           Report

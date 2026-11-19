@@ -425,3 +425,7 @@ label.disabled { opacity: .5; }
   .rdoc .rt th, .rdoc .rt td { font-size: 10.5px !important; padding: 3px 4px !important; }
   .rb { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+.report-type { margin-bottom: 12px; }
+.report-type button { min-height: 44px; padding: 0 20px; }
+@media print { .report-type { display: none !important; } }

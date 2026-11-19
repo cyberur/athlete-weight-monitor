@@ -87,8 +87,11 @@ export function TeamScreen() {
             </button>
           )}
           <span className="team-date-label">{fmtDate(date, { weekday: true, year: true })}</span>
-          <button className="btn btn-sm team-report" onClick={() => go(`reports?from=${date}&to=${date}`)} data-testid="team-report">
+          <button className="btn btn-sm team-report" onClick={() => go(`reports?type=weight&from=${date}&to=${date}`)} data-testid="team-report">
             Report
+          </button>
+          <button className="btn btn-sm" onClick={() => go(`reports?type=attendance&date=${date}`)} data-testid="team-attendance">
+            Attendance
           </button>
         </div>
         <div className="counts">
